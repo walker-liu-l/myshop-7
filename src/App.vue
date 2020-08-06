@@ -9,7 +9,8 @@
 import tabBar from './components/tabBar/tabBar'
 export default {
   components:{
-    tabBar
+    tabBar,
+   
   }
 }
 </script>
