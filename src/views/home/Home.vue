@@ -23,7 +23,7 @@
       @pullingUp="loadMore"
     >
       <!-- 轮播图 -->
-      <div class="block">
+      <!-- <div class="block">
         <el-carousel height="190px" width="100%">
           <el-carousel-item v-for="item in bannerdatas" :key="item.index">
             <a :href="item.link">
@@ -31,7 +31,8 @@
             </a>
           </el-carousel-item>
         </el-carousel>
-      </div>
+      </div>-->
+      <HomeSwiper :bannerdatas="bannerdatas" @swiperImgLoad="swiperImgLoad"></HomeSwiper>
       <!-- 推荐 -->
       <RecommendView :recommends="recommends"></RecommendView>
       <!-- 本周流行 -->
@@ -67,9 +68,13 @@ import BackTop from "../../components/backTop/BackTop";
 // 导入防抖函数
 import { debounce } from "../../components/common/utils";
 
+// 引入轮播图 swiper 组件
+import HomeSwiper from "../../components/homeswiper/HomeSwiper";
+
 export default {
   components: {
     NavBar,
+    HomeSwiper,
     RecommendView,
     FashionView,
     TabControl,
@@ -97,9 +102,9 @@ export default {
       isShowBackTop: false,
       tabOffsetTop: 0,
       isTabFixed: false,
-      saveY:0
+      saveY: 0,
     };
-  }, 
+  },
   methods: {
     //网络请求方法
     async getHomeMultidata() {
@@ -157,13 +162,13 @@ export default {
       //处理可滚动区域更新后会卡顿的bug，只需要监听新的页面数据加载完之后，重新刷新一次,重新计算可滚动的区域
       this.$refs.scroll && this.$refs.scroll.refresh();
     },
-    //防抖
+    //防抖,未完成
     debounce() {},
     //监听轮播图图片是否加载完成
     swiperImgLoad() {
       //获取TabControl 的 offsetTop
       //组件中都有一个属性$el,用于获取组件中的元素
-      console.log(this.$refs.TabControl.$el.offsetTop);
+      // console.log(this.$refs.TabControl.$el.offsetTop);
       this.tabOffsetTop = this.$refs.TabControl.$el.offsetTop;
     },
   },
