@@ -1,20 +1,20 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <keep-alive exclude="Detail">
+      <router-view></router-view>
+    </keep-alive>
     <tabBar></tabBar>
   </div>
 </template>
 
 <script>
-import tabBar from './components/tabBar/tabBar'
+import tabBar from "./components/tabBar/tabBar";
 export default {
-  components:{
+  components: {
     tabBar,
-   
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
-  
 </style>

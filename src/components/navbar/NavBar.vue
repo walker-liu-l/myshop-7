@@ -21,6 +21,7 @@ export default {};
   display: flex;
   height: 44px;
   line-height: 44px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .left,

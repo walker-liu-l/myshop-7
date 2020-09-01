@@ -4,6 +4,15 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
+
+    <!-- 复制一个tabControl,控制显隐实现吸顶效果 -->
+    <TabControl
+      :titles="['流行', '新款', '精选']"
+      class="tab-control1"
+      @tabClick="tabClick"
+      ref="TabControl1"
+      v-show="isTabFixed"
+    ></TabControl>
     <!-- 使用滚动 -->
     <Scroll
       class="content"
@@ -15,10 +24,10 @@
     >
       <!-- 轮播图 -->
       <div class="block">
-        <el-carousel height="190px">
+        <el-carousel height="190px" width="100%">
           <el-carousel-item v-for="item in bannerdatas" :key="item.index">
             <a :href="item.link">
-              <img :src="item.image" alt />
+              <img :src="item.image" @load="swiperImgLoad" />
             </a>
           </el-carousel-item>
         </el-carousel>
@@ -28,7 +37,12 @@
       <!-- 本周流行 -->
       <FashionView></FashionView>
       <!-- TabControl title -->
-      <TabControl :titles="['流行', '新款', '精选']" class="tab-control" @tabClick="tabClick"></TabControl>
+      <TabControl
+        :titles="['流行', '新款', '精选']"
+        class="tab-control"
+        @tabClick="tabClick"
+        ref="TabControl"
+      ></TabControl>
       <!-- 商品 goodslist  -->
       <GoodsList :goods="goods[currentType].list"></GoodsList>
     </Scroll>
@@ -49,6 +63,9 @@ import GoodsList from "../../components/goods/GoodsList";
 import Scroll from "../../components/common/scroll/Scroll";
 // 引入backTop
 import BackTop from "../../components/backTop/BackTop";
+
+// 导入防抖函数
+import { debounce } from "../../components/common/utils";
 
 export default {
   components: {
@@ -78,19 +95,12 @@ export default {
       },
       currentType: "pop",
       isShowBackTop: false,
+      tabOffsetTop: 0,
+      isTabFixed: false,
+      saveY:0
     };
-  },
+  }, 
   methods: {
-    // 防抖封装
-    debounce(func, delay) {
-      let timer = null;
-      return function (...args) {
-        if (timer) clearTimeout(timer);
-        timer = setTimeout(() => {
-          func.apply(this, args);
-        }, delay);
-      };
-    },
     //网络请求方法
     async getHomeMultidata() {
       const { data: res } = await this.$http.get("/home/multidata");
@@ -128,6 +138,8 @@ export default {
           this.currentType = "sell";
           break;
       }
+      this.$refs.TabControl1.currentIndex = index;
+      this.$refs.TabControl.currentIndex = index;
     },
     //回到顶部
     backClick() {
@@ -136,6 +148,8 @@ export default {
     contentScroll(position) {
       //回到顶部按钮的显隐   重新赋值后就不再是默认值 false 了。
       this.isShowBackTop = -position.y > 1000;
+      //tabControl 是否吸顶 -> 是否定位fixed
+      this.isTabFixed = -position.y > this.tabOffsetTop;
     },
     //处理上拉加载
     loadMore() {
@@ -145,13 +159,20 @@ export default {
     },
     //防抖
     debounce() {},
+    //监听轮播图图片是否加载完成
+    swiperImgLoad() {
+      //获取TabControl 的 offsetTop
+      //组件中都有一个属性$el,用于获取组件中的元素
+      console.log(this.$refs.TabControl.$el.offsetTop);
+      this.tabOffsetTop = this.$refs.TabControl.$el.offsetTop;
+    },
   },
   mounted() {
-    //防抖包装
-    const refresh = this.debounce(this.$refs.scroll.refresh,200);
+    //防抖  功能未完成
+    const refresh = debounce(this.$refs.scroll.refresh, 200);
     //  监听item图片是否加载完毕
     this.$bus.$on("itemImgLoad", () => {
-      // refresh();  // 这里有个bug，调用 refresh() 会报错  
+      // refresh();  // 这里有个bug，调用 refresh() 会报错
     });
   },
 };
@@ -164,11 +185,11 @@ export default {
   /* padding-top: 44px; */
 }
 .home-nav {
-  position: fixed;
+  /* position: fixed;
   left: 0;
   right: 0;
   top: 0;
-  z-index: 999;
+  z-index: 999; */
   background-color: #fb7299;
   color: white;
 }
@@ -178,15 +199,19 @@ export default {
 }
 
 .tab-control {
-  position: sticky;
-  top: 44px;
+  /* position: sticky; */
+  /* top: 44px; */
   /* z-index: 9; */
   cursor: pointer;
 }
 
+.tab-control1 {
+  position: relative;
+  z-index: 9;
+}
 .content {
   height: calc(100% - 93px);
   overflow: hidden;
-  margin-top: 44px;
+  /* margin-top: 44px; */
 }
 </style>

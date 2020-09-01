@@ -1,7 +1,6 @@
 <template>
   <div class="goods">
     <GoodsListIem v-for="item in goods" :key="item.index" :goodsItem="item"></GoodsListIem>
-    <!-- {{goods}} -->
   </div>
 </template>
 
@@ -9,6 +8,7 @@
 import GoodsListIem from "./GoodsListItem";
 
 export default {
+  name: "GoodsList",
   props: {
     goods: {
       type: Array,
@@ -25,8 +25,8 @@ export default {
 
 <style scoped>
 .goods {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 </style>

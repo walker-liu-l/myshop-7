@@ -8,6 +8,11 @@ import 'element-ui/lib/theme-chalk/index.css';
 import './assets/css/base.css'
 import './assets/css/normalize.css'
 
+//引入mint-ui
+import Mint from 'mint-ui'
+import 'mint-ui/lib/style.css'
+Vue.use(Mint);
+
 import axios from 'axios'
 // Vue.prototype.axios = axios
 Vue.prototype.$http = axios

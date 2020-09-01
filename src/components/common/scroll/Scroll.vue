@@ -30,7 +30,6 @@ export default {
       probeType: this.probeType,
       pullUpLoad: this.pullUpLoad,
     });
-    console.log(this.scroll);
     //监听滚动位置
     this.scroll.on("scroll", (position) => {
       this.$emit("scroll", position);
@@ -51,6 +50,7 @@ export default {
       this.scroll.finishPullUp();
     },
     refresh() {
+      // console.log('-----');
       this.scroll && this.scroll.refresh();
     },
   },
